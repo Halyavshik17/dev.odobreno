@@ -396,30 +396,30 @@ function open_json_file($filePath)
  * @param  mixed  $value
  * @return mixed
  */
-function set_purchase_data($key, $value, $path_info = 'storage/framework/envato/license.json')
-{
-    $filePath = base_dir($path_info);
+// function set_purchase_data($key, $value, $path_info = 'storage/framework/envato/license.json')
+// {
+//     $filePath = base_dir($path_info);
 
-    // check if file not exist then create new file
-    if (! file_exists($filePath)) {
-        $myfile = fopen($filePath, 'w') or exit('Unable to open file!');
-        $txt = '{}';
-        fwrite($myfile, $txt);
-        fclose($myfile);
-    }
+//     // check if file not exist then create new file
+//     if (! file_exists($filePath)) {
+//         $myfile = fopen($filePath, 'w') or exit('Unable to open file!');
+//         $txt = '{}';
+//         fwrite($myfile, $txt);
+//         fclose($myfile);
+//     }
 
-    $infoArray = open_json_file($filePath);
-    if (@array_key_exists($key, $infoArray)) {
-        $infoArray[$key] = $value;
-    } else {
-        $infoArray[$key] = $value;
-    }
+//     $infoArray = open_json_file($filePath);
+//     if (@array_key_exists($key, $infoArray)) {
+//         $infoArray[$key] = $value;
+//     } else {
+//         $infoArray[$key] = $value;
+//     }
 
-    $jsonData = json_encode($infoArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    $respo = @file_put_contents($filePath, stripslashes($jsonData));
+//     $jsonData = json_encode($infoArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+//     $respo = @file_put_contents($filePath, stripslashes($jsonData));
 
-    return $infoArray[$key];
-}
+//     return $infoArray[$key];
+// }
 
 /**
  * get purchase data
@@ -428,24 +428,24 @@ function set_purchase_data($key, $value, $path_info = 'storage/framework/envato/
  * @param  mixed  $path_info
  * @return mixed
  */
-function get_purchase_data($key, $path_info = 'storage/framework/envato/license.json')
-{
-    $filePath = base_dir($path_info);
-    // check if file not exist then create new file
-    if (! file_exists($filePath)) {
-        $myfile = fopen($filePath, 'w') or exit('Unable to open file!');
-        $txt = '{}';
-        fwrite($myfile, $txt);
-        fclose($myfile);
-    }
-    $infoArray = open_json_file($filePath);
+// function get_purchase_data($key, $path_info = 'storage/framework/envato/license.json')
+// {
+//     $filePath = base_dir($path_info);
+//     // check if file not exist then create new file
+//     if (! file_exists($filePath)) {
+//         $myfile = fopen($filePath, 'w') or exit('Unable to open file!');
+//         $txt = '{}';
+//         fwrite($myfile, $txt);
+//         fclose($myfile);
+//     }
+//     $infoArray = open_json_file($filePath);
 
-    if (@array_key_exists($key, $infoArray)) {
-        return $infoArray[$key];
-    }
+//     if (@array_key_exists($key, $infoArray)) {
+//         return $infoArray[$key];
+//     }
 
-    return false;
-}
+//     return false;
+// }
 
 /**
  * clear purchase data
@@ -453,20 +453,20 @@ function get_purchase_data($key, $path_info = 'storage/framework/envato/license.
  * @param  mixed  $path_info
  * @return bool
  */
-function clear_purchase_data($path_info = 'storage/framework/envato/license.json')
-{
-    $filePath = base_dir($path_info);
-    $infoArray = open_json_file($filePath);
+// function clear_purchase_data($path_info = 'storage/framework/envato/license.json')
+// {
+//     $filePath = base_dir($path_info);
+//     $infoArray = open_json_file($filePath);
 
-    $infoArray = ['sl' => 1];
-    $jsonData = json_encode($infoArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    $respo = file_put_contents($filePath, stripslashes($jsonData));
-    if ($respo) {
-        return true;
-    }
+//     $infoArray = ['sl' => 1];
+//     $jsonData = json_encode($infoArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+//     $respo = file_put_contents($filePath, stripslashes($jsonData));
+//     if ($respo) {
+//         return true;
+//     }
 
-    return false;
-}
+//     return false;
+// }
 
 /**
  * Check if the current request is using HTTPS

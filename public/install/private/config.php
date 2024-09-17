@@ -32,7 +32,7 @@ $config = [
 
     'menu' => [
         'requirement' => 'Requirement',
-        'envato_license' => 'Envato License',
+        //'envato_license' => 'Envato License',
         'env_requirement' => 'Environment Requirement',
         'db_configuration' => 'Database Configuration',
         // 'migration_seeding'   => 'Migration & Seeding',
