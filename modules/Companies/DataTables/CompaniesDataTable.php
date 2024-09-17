@@ -22,6 +22,7 @@ class CompaniesDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
+        // Табличечка
         return (new EloquentDataTable($query))
             ->addColumn('action', function ($query) {
                 return $query->actionBtn([
