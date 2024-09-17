@@ -1,0 +1,16 @@
+{
+    "Auth": true,
+    "Employee": true,
+    "Inventory": true,
+    "Language": true,
+    "Permission": true,
+    "Purchase": true,
+    "Report": true,
+    "Role": true,
+    "Setting": true,
+    "User": true,
+    "VehicleMaintenance": true,
+    "VehicleManagement": true,
+    "VehicleRefueling": true,
+    "Companies": true
+}

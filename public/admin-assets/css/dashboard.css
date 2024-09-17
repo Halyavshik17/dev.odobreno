@@ -1,0 +1,4 @@
+#line_chart, #pie_chart, #doughnut_chart, #venn_diagram, #multi_axis_line {
+    width: 100%;
+    height: 500px;
+}
