@@ -1,11 +1,4 @@
 <?php
-if (! session_get('envato_license')) { ?>
-    <script>
-        window.location.href = './?a=envato_license';
-    </script>
-    <?php
-    exit();
-}
 $vendor_warning = false;
 $env_warning = false;
 ?>
@@ -55,7 +48,7 @@ $env_warning = false;
     </div>
 
     <div class="col-md-12">
-        <a href="./?a=envato_license" class="btn btn-success pull-left aiia-wizard-button-previous"
+        <a href="./?a=requirement" class="btn btn-success pull-left aiia-wizard-button-previous"
             id="previous-btn"><span>Previous</span></a>
 
         <?php if ($vendor_warning || $env_warning) { ?>

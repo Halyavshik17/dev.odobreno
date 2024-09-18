@@ -11,6 +11,6 @@
     "User": true,
     "VehicleMaintenance": true,
     "VehicleManagement": true,
-    "VehicleRefueling": true,
+    "VehicleRefueling": false,
     "Companies": true
 }

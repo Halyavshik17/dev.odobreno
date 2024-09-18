@@ -160,7 +160,7 @@ $permission_warning = false;
         } else {
             session_set('requirement', true);
             ?>
-            <a class="btn btn-success pull-right aiia-wizard-button-next" href="./?a=envato_license"><span>Next</span></a>
+            <a class="btn btn-success pull-right aiia-wizard-button-next" href="./?a=env_requirement"><span>Next</span></a>
         <?php } ?>
     </div>
 </div>

@@ -71,10 +71,11 @@
                 </div>
             </div>
         @endif
-        @if (can('vehicle_requisition_management') ||
+        @if (module_active('VehicleRefueling') && 
+                (can('vehicle_requisition_management') ||
                 can('pick_drop_requisition') ||
                 can('vehicle_maintenance_management') ||
-                can('refueling_requisition_management'))
+                can('refueling_requisition_management')))
             <div class="col-12 col-lg-6 col-xl-3 mb-4 mb-xl-0">
                 <div class="card bg-white overflow-hidden">
                     <div class="card-header px-3 bg-white">
@@ -303,8 +304,9 @@
         @endcan
     </div>
     <!-- 2nd  -->
-    @can('vehicle_requisition_report')
-        <div class="row mb-4">
+    {{-- @can('vehicle_requisition_report') --}}
+    @if (module_active('VehicleRefueling') && can('vehicle_requisition_report'))
+        {{-- <div class="row mb-4">
             <div class="col-xl-4 mb-4 mb-xl-0">
                 <div class="card rounded-0">
                     <div class="card-header card_header px-3">
@@ -333,7 +335,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     @endcan
     <!-- new chart.js End -->
     @can('legal_document_management')
