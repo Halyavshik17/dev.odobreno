@@ -72,18 +72,18 @@
                         <x-admin.nav-link href="{{ route('admin.position.index') }}">
                             {{ localize('Position') }}
                         </x-admin.nav-link>
-                        <x-admin.nav-link href="{{ route('admin.department.index') }}">
+                        {{-- <x-admin.nav-link href="{{ route('admin.department.index') }}">
                             {{ localize('Department') }}
-                        </x-admin.nav-link>
+                        </x-admin.nav-link> --}}
                         <x-admin.nav-link href="{{ route('admin.driver.index') }}">
                             {{ localize('Manage Driver') }}
                         </x-admin.nav-link>
                         <x-admin.nav-link href="{{ route('admin.license_type.index') }}">
                             {{ localize('License Type') }}
                         </x-admin.nav-link>
-                        <x-admin.nav-link href="{{ route('admin.driver.performance.index') }}">
+                        {{-- <x-admin.nav-link href="{{ route('admin.driver.performance.index') }}">
                             {{ localize('Driver Performance') }}
-                        </x-admin.nav-link>
+                        </x-admin.nav-link> --}}
                     </x-admin.multi-nav>
                 @endif
                 <!-- Vehicle Management -->
@@ -125,21 +125,21 @@
                                 {{ localize('Vehicle Type') }}
                             </x-admin.nav-link>
                         @endcan
-                        @can('vehicle_rta_office_management')
+                        {{-- @can('vehicle_rta_office_management')
                             <x-admin.nav-link href="{{ route('admin.vehicle.rta-office.index') }}">
                                 {{ localize('RTA Office') }}
                             </x-admin.nav-link>
-                        @endcan
+                        @endcan --}}
                         @can('vehicle_ownership_type_management')
                             <x-admin.nav-link href="{{ route('admin.vehicle.ownership.type.index') }}">
                                 {{ localize('Ownership Type') }}
                             </x-admin.nav-link>
                         @endcan
-                        @can('vehicle_division_management')
+                        {{-- @can('vehicle_division_management')
                             <x-admin.nav-link href="{{ route('admin.vehicle.division.index') }}">
                                 {{ localize('Vehicle Division') }}
                             </x-admin.nav-link>
-                        @endcan
+                        @endcan --}}
                         @can('document_type_management')
                             <x-admin.nav-link href="{{ route('admin.vehicle.document-type.index') }}">
                                 {{ localize('Document Type') }}
@@ -148,8 +148,8 @@
                     </x-admin.multi-nav>
                 @endif
 
-                {{-- Vehicle Requisition --}}
-                @if (module_active('VehicleManagement') && (can('vehicle_requisition_type_management') || can('pick_drop_requisition')))
+                {{-- Vehicle Requisition | Запросы ТС --}}
+                {{-- @if (module_active('VehicleManagement') && (can('vehicle_requisition_type_management') || can('pick_drop_requisition')))
                     <x-admin.multi-nav>
                         <x-slot name="title">
 
@@ -197,7 +197,7 @@
                             </x-admin.nav-link>
                         @endcan
                     </x-admin.multi-nav>
-                @endif
+                @endif --}}
 
                 {{-- Vehicle Insurance --}}
                 @if (module_active('VehicleManagement') &&
@@ -460,7 +460,7 @@
                             </div>
                             {{ localize('Reports') }}
                         </x-slot>
-                        @can('employee_report')
+                        {{-- @can('employee_report')
                             <x-admin.nav-link href="{{ route('admin.report.employee') }}">
                                 {{ localize('Employee Report') }}
                             </x-admin.nav-link>
@@ -513,7 +513,7 @@
                             <x-admin.nav-link href="{{ route('admin.report.maintenance') }}">
                                 {{ localize('Maintenance Requistion Report') }}
                             </x-admin.nav-link>
-                        @endcan
+                        @endcan --}}
 
                     </x-admin.multi-nav>
                 @endif

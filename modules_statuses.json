@@ -1,10 +1,10 @@
 {
     "Auth": true,
     "Employee": true,
-    "Inventory": true,
+    "Inventory": false,
     "Language": true,
     "Permission": true,
-    "Purchase": true,
+    "Purchase": false,
     "Report": true,
     "Role": true,
     "Setting": true,

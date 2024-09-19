@@ -49,7 +49,7 @@
                                             class="float-end text-success"><strong>{{ $total_maintenances }}</strong></span></a>
                                 </div>
                             @endcan
-                            @can('inventory_stock_management')
+                            {{-- @can('inventory_stock_management')
                                 <div>
                                     <svg width="25" height="25" viewBox="0 0 30 30" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
                                         href="{{ route('admin.inventory.stock.index') }}">@localize('Available')
                                         <span class="float-end text-success"><strong>{{ $available }}</strong></span></a>
                                 </div>
-                            @endcan
+                            @endcan --}}
                             <div>
                                 &nbsp;
                             </div>
@@ -218,7 +218,7 @@
                 </div>
             </div>
         @endif
-        @if (can('inventory_stock_management'))
+        {{-- @if (can('inventory_stock_management'))
             <div class="col-12 col-lg-6 col-xl-3">
                 <div class="card bg-white overflow-hidden">
                     <div class="card-header px-3 bg-white">
@@ -267,7 +267,7 @@
                     </div>
                 </div>
             </div>
-        @endif
+        @endif --}}
     </div>
 
     <div class="row mb-4">

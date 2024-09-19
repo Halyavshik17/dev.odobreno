@@ -5,7 +5,7 @@
     <!--/.sidebar toggle icon-->
     <div class="navbar-icon d-flex">
         <ul class="navbar-nav flex-row align-items-center ">
-            <li class="nav-item dropdown language-menu notification  me-3">
+            {{-- <li class="nav-item dropdown language-menu notification  me-3">
                 <a class="language-menu_item border rounded-circle d-flex justify-content-center align-items-center overflow-hidden"
                     href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 
@@ -22,7 +22,7 @@
                         </a>
                     @endforeach
                 </div>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown user_profile me-2">
                 <a class="dropdown-toggle user_profile_item border rounded-circle  d-flex justify-content-center align-items-center overflow-hidden"
                     href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
