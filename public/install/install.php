@@ -51,9 +51,6 @@ foreach ($config['menu'] as $link => $key) { ?>
                                 case 'requirement':
                                     require_once __DIR__.'/include/card/requirement.php';
                                     break;
-                                // case 'envato_license':
-                                //     require_once __DIR__.'/include/card/envato_license.php';
-                                //     break;
                                 case 'env_requirement':
                                     require_once __DIR__.'/include/card/env_requirement.php';
                                     break;

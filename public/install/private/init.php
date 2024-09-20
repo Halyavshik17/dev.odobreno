@@ -11,8 +11,6 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once __DIR__.'/function.php';
 require_once __DIR__.'/config.php';
-//require_once __DIR__.'/EnvatoLicVerify.php';
-//$envatoLic = new EnvatoLicVerify();
 
 /**
  * Check if the file is installed
@@ -25,12 +23,6 @@ if (is_post_request()) {
         $data = $_POST;
     }
     switch ($data['action']) {
-        //case 'envato-license':
-            //envato_request_validate($data);
-            //$envatoLic->verify_purchase($data);
-            //session_set('envato_license', true);
-            //header('location: ./?a=env_requirement');
-            //break;
         case 'create .env file':
             //copy .env.example to .env
             copy(base_dir('.env.example'), base_dir('.env'));
