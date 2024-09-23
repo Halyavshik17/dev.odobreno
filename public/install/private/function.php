@@ -389,86 +389,6 @@ function open_json_file($filePath)
 }
 
 /**
- * set purchase data
- *
- * @param  mixed  $path_info
- * @param  mixed  $key
- * @param  mixed  $value
- * @return mixed
- */
-// function set_purchase_data($key, $value, $path_info = 'storage/framework/envato/license.json')
-// {
-//     $filePath = base_dir($path_info);
-
-//     // check if file not exist then create new file
-//     if (! file_exists($filePath)) {
-//         $myfile = fopen($filePath, 'w') or exit('Unable to open file!');
-//         $txt = '{}';
-//         fwrite($myfile, $txt);
-//         fclose($myfile);
-//     }
-
-//     $infoArray = open_json_file($filePath);
-//     if (@array_key_exists($key, $infoArray)) {
-//         $infoArray[$key] = $value;
-//     } else {
-//         $infoArray[$key] = $value;
-//     }
-
-//     $jsonData = json_encode($infoArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-//     $respo = @file_put_contents($filePath, stripslashes($jsonData));
-
-//     return $infoArray[$key];
-// }
-
-/**
- * get purchase data
- *
- * @param  mixed  $key
- * @param  mixed  $path_info
- * @return mixed
- */
-// function get_purchase_data($key, $path_info = 'storage/framework/envato/license.json')
-// {
-//     $filePath = base_dir($path_info);
-//     // check if file not exist then create new file
-//     if (! file_exists($filePath)) {
-//         $myfile = fopen($filePath, 'w') or exit('Unable to open file!');
-//         $txt = '{}';
-//         fwrite($myfile, $txt);
-//         fclose($myfile);
-//     }
-//     $infoArray = open_json_file($filePath);
-
-//     if (@array_key_exists($key, $infoArray)) {
-//         return $infoArray[$key];
-//     }
-
-//     return false;
-// }
-
-/**
- * clear purchase data
- *
- * @param  mixed  $path_info
- * @return bool
- */
-// function clear_purchase_data($path_info = 'storage/framework/envato/license.json')
-// {
-//     $filePath = base_dir($path_info);
-//     $infoArray = open_json_file($filePath);
-
-//     $infoArray = ['sl' => 1];
-//     $jsonData = json_encode($infoArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-//     $respo = file_put_contents($filePath, stripslashes($jsonData));
-//     if ($respo) {
-//         return true;
-//     }
-
-//     return false;
-// }
-
-/**
  * Check if the current request is using HTTPS
  *
  * @return bool
@@ -484,29 +404,6 @@ function is_https()
     }
 
     return false;
-}
-
-/**===============================================
- * Envato API
- * ==============================================*/
-
-function envato_request_validate($data)
-{
-    $message = null;
-    // validation for each posted data
-    $user_id = filter_request('User ID', $data['user_id']);
-    $purchase_key = filter_request('Purchase Key', $data['purchase_key']);
-    // check if user id and purchase key is valid
-    if (is_string($user_id)) {
-        $message .= "$user_id";
-    }
-    if (is_string($purchase_key)) {
-        $message .= "$purchase_key";
-    }
-    if ($message) {
-        session_flash('error', [$message]);
-        header('location: ./?a=envato_license');
-    }
 }
 
 /*======================================
