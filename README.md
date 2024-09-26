@@ -1,5 +1,3 @@
-<p align="center"><img src="./public/admin-assets/img/logo.png" width="400" alt="Vms Logo"></p>
-
 ## About Vms
 
 # How To Install
@@ -40,6 +38,7 @@ cp .env.example .env
 
 ```bash
 composer vms
+composer install
 ```
 
 -   then publish assets
@@ -60,6 +59,7 @@ DB_PASSWORD=
 ```
 
 -   then migrate and seed
+-   перед выполнением необходимо чтобы все модули были активированы
 
 ```bash
 php artisan migrate:fresh --seed
@@ -71,6 +71,9 @@ php artisan migrate:fresh --seed
  php artisan serve
 ```
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within This Project, please send an e-mail to <a href="https://bdtask.com" target="_blank">Bdtask Limited</a> via [support@bdtask.com](mailto:support@bdtask.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan config:cache
+php artisan cache:clear
+php artisan view:clear
+php artisan route:clear
+```
