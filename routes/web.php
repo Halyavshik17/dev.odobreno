@@ -20,4 +20,6 @@ Route::get('/', [DashboardController::class, 'redirectToDashboard'])->name('home
 Route::get('/admin', [DashboardController::class, 'redirectToDashboard']);
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('lang/{lang}', [LocalizationController::class, 'switchLang'])->name('lang.switch');
-Route::get('dev/artisan-http/storage-link', [ArtisanHttpController::class, 'storageLink'])->name('artisan-http.storage-link');
+
+// ArtisanController - выполнение команд из под запроса
+//Route::get('dev/artisan-http/storage-link', [ArtisanHttpController::class, 'storageLink'])->name('artisan-http.storage-link');
