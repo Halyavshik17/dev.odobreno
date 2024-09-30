@@ -240,7 +240,7 @@
 
 
                 {{-- Vehicle Maintenance --}}
-                @if (module_active('VehicleMaintenance') &&
+                {{-- @if (module_active('VehicleMaintenance') &&
                         (can('vehicle_maintenance_management') || can('vehicle_maintenance_type_management')))
                     <x-admin.multi-nav>
                         <x-slot name="title">
@@ -269,7 +269,7 @@
                             </x-admin.nav-link>
                         @endcan
                     </x-admin.multi-nav>
-                @endif
+                @endif --}}
 
 
                 {{-- Vehicle Insurance --}}
