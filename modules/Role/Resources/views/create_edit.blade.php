@@ -44,12 +44,12 @@
                                                     <div class="col-md-4 form-group">
                                                         <div class="form-check form-switch">
                                                             <input class="form-check-input" type="checkbox"
-                                                                role="switch" id="{{ $p->name }}"
+                                                                role="switch" id="{{ $p->display_name }}"
                                                                 name="permissions[{{ $p->id }}]"
                                                                 {{ config('theme.edit') ? (permission_check($item->permissions, $p->id) ? 'checked' : '') : '' }}
                                                                 value="{{ $p->id }}">
-                                                            <label class="form-check-label" for="{{ $p->name }}">
-                                                                {{ permission_key_to_name($p->name) }}
+                                                            <label class="form-check-label" for="{{ $p->display_name }}">
+                                                                {{ permission_key_to_name($p->display_name) }}
                                                             </label>
                                                         </div>
                                                     </div>

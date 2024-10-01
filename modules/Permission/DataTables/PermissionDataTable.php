@@ -21,7 +21,8 @@ class PermissionDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->editColumn('name', function ($permission) {
-                return ucwords(implode(' ', explode('_', $permission->name)));
+                return ucwords(implode(' ', explode('_', $permission->display_name)));
+                // return ucwords(implode(' ', explode('_', $permission->name)));
             })
             ->setRowId('id')
             ->addIndexColumn();

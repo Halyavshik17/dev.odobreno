@@ -91,6 +91,9 @@ class RoleTableSeeder extends Seeder
                 'env_setting_management',
                 'language_setting_management',
             ],
+            'Company' => [
+                'company_management',
+            ]
         ];
         $roles = [
             'User' => [],

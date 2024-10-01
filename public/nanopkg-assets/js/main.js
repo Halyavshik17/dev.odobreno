@@ -387,6 +387,6 @@ function sumoselectAjaxInit(element) {
         search: true,
         searchText: 'Search...',
         noMatch: 'No results found',
-        csvDispCount: 3
+        csvDispCount: 6
     });
 }

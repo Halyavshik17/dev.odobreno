@@ -14,10 +14,10 @@ class CompaniesController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware(['auth', 'verified', 'permission:language_setting_management']);
-        //$this->middleware('strip_scripts_tag')->only(['store', 'update']);
-        // set the request middleware for the controller
-        //$this->middleware('request:ajax', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
+        $this->middleware(['auth', 'verified', 'permission:company_management']);
+        $this->middleware('strip_scripts_tag')->only(['store', 'update']);
+        //set the request middleware for the controller
+        $this->middleware('request:ajax', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
         \cs_set('theme', [
             'title' => 'Setting',
             'breadcrumb' => [

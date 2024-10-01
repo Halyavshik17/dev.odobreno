@@ -32,4 +32,9 @@ class Permission extends SpatiePermission
 
         return $groupData;
     }
+
+    public function getDisplayNameAttribute()
+    {
+        return __('permissions.' . $this->name);
+    }
 }
