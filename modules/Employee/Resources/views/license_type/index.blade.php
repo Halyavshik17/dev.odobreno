@@ -1,11 +1,14 @@
 <x-app-layout>
     <x-card>
         <x-slot name='actions'>
-            <a class="btn btn-success" href="javascript:void(0);"
-                onclick="axiosModal('{{ route(\config('theme.rprefix') . '.create') }}')">
-                <i class="fa fa-plus"></i>&nbsp;
-                {{ localize('Add License Type') }}
-            </a>
+            {{-- Пусть будет setting_management универсален --}}
+            @if(can('setting_management'))
+                <a class="btn btn-success" href="javascript:void(0);"
+                    onclick="axiosModal('{{ route(\config('theme.rprefix') . '.create') }}')">
+                    <i class="fa fa-plus"></i>&nbsp;
+                    {{ localize('Add License Type') }}
+                </a>
+            @endif
         </x-slot>
         <div>
             <x-data-table :dataTable="$dataTable" />

@@ -11,7 +11,9 @@ class LicenseTypeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'verified', 'permission:employee_management', 'status_check']);
+        $this->middleware(['auth', 'verified', 'permission:employee_management', 'status_check'])->only(['index', 'show']);
+        // Дэдэ
+        $this->middleware(['auth', 'verified', 'permission:setting_management', 'status_check'])->only(['create', 'edit', 'destroy', 'update', 'store']);
         $this->middleware('strip_scripts_tag')->only(['store', 'update']);
         \cs_set('theme', [
             'title' => 'License Type List',

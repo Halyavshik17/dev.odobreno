@@ -19,8 +19,7 @@ class LicenseTypeDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return (new EloquentDataTable($query))
-
+        return (new EloquentDataTable($query)) 
             ->addColumn('action', function ($query) {
                 $button = '<div class="align-items-center">';
 
@@ -74,19 +73,31 @@ class LicenseTypeDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        return [
-            Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
-            Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
-            Column::make('created_at')->title(localize('Created')),
-            Column::make('updated_at')->title(localize('Updated')),
-            Column::computed('action')->title(localize('Action'))
-                ->orderable(false)
-                ->searchable(false)
-                ->exportable(false)
-                ->printable(false)
-                ->width(80)
-                ->addClass('text-center'),
-        ];
+        if(auth()->user()->can("setting_management"))
+        {
+            return [
+                Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
+                Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
+                Column::make('created_at')->title(localize('Created')),
+                Column::make('updated_at')->title(localize('Updated')),
+                Column::computed('action')->title(localize('Action'))
+                    ->orderable(false)
+                    ->searchable(false)
+                    ->exportable(false)
+                    ->printable(false)
+                    ->width(80)
+                    ->addClass('text-center'),
+            ];
+        }
+        else
+        {
+            return [
+                Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
+                Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
+                Column::make('created_at')->title(localize('Created')),
+                Column::make('updated_at')->title(localize('Updated')),
+            ];
+        }
     }
 
     /**
