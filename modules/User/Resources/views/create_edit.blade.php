@@ -207,53 +207,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 pt-1 pb-1">
-                                <div>
-                                    <h4 class="border-bottom  py-1 mx-1 mb-0 font-medium-2 font-black">
-                                        <i class="feather icon-lock mr-50 "></i>
-                                        {{ localize('Permission') }}
-                                    </h4>
-                                    <div class="row mt-1">
-                                        @forelse (Modules\Permission\Entities\Permission::groups() as $gName=>$g)
-                                            <div class="col-md-12">
-                                                <fieldset>
-                                                    <legend>
-                                                        {{ $gName }}
-                                                    </legend>
-                                                    <div class="row py-3">
-                                                        @forelse ($g as $p)
-                                                            <div class="col-md-4 form-group">
-                                                                <div class="form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        role="switch" id="{{ $p->name }}"
-                                                                        name="permissions[{{ $p->id }}]"
-                                                                        {{ isset($item) ? (permission_check($item->permissions, $p->id) ? 'checked' : '') : '' }}
-                                                                        value="{{ $p->id }}">
-                                                                    <label class="form-check-label"
-                                                                        for="{{ $p->name }}">
-                                                                        {{ permission_key_to_name($p->name) }}
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        @empty
-                                                            <div class="col-md-12 text-center p-5">
-                                                                <p class="text-danger">
-                                                                    {{ localize('No Permission Found') }}</p>
-                                                            </div>
-                                                        @endforelse
-                                                    </div>
-
-                                                </fieldset>
-                                            </div>
-                                        @empty
-                                            <div class="col-md-12 text-center p-5">
-                                                <p class="text-danger">{{ localize('No Permission Group') }}</p>
-                                            </div>
-                                        @endforelse
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="col-md-12 ">
                                 <div class="form-group pt-1 pb-1">
                                     <button type="submit"
