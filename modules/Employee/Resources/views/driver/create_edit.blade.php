@@ -2,6 +2,7 @@
     action="{{ isset($item) ? route(config('theme.rprefix') . '.update', $item->id) : route(config('theme.rprefix') . '.store') }}"
     method="POST" class="needs-validation modal-content" novalidate="novalidate" enctype="multipart/form-data"
     onsubmit="submitFormAxios(event)">
+
     @csrf
     @if (isset($item))
         @method('PUT')
@@ -92,21 +93,21 @@
                 </div>
 
                 <div class="form-group row my-2">
-                    <label for="license_type_id" class="col-sm-5 col-form-label">@localize('License Type') <i
-                            class="text-danger">*</i></label>
+                    <label for="license_type_ids" class="col-sm-5 col-form-label">@localize('License Type') <i class="text-danger">*</i></label>
                     <div class="col-sm-7">
-                        <select class="form-control basic-single" required name="license_type_id"
-                            id="license_type_id" tabindex="-1" aria-hidden="true">
-                            <option value="" selected="selected">@localize('Please Select One')
-                            </option>
+                        <select class="form-control basic-single sumoselect-init" required name="license_type_ids[]"
+                            id="license_type_ids" multiple tabindex="0"> <!-- Изменено tabindex на 0 -->
+                            <option value="" disabled selected>@localize('Please Select')</option>
                             @foreach ($license_types as $license_type)
                                 <option value="{{ $license_type->id }}"
-                                    {{ isset($item) ? ($item->license_type_id == $license_type->id ? 'selected' : '') : '' }}>
+                                    {{ isset($selectedLicenseTypes) && in_array($license_type->id, $selectedLicenseTypes) ? 'selected' : '' }}>
                                     {{ $license_type->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
+                
+                        
 
                 <div class="form-group row my-2">
                     <label for="license_issue_date" class="col-sm-5 col-form-label">@localize('License Issue Date') <i
@@ -174,3 +175,8 @@
         <button class="btn btn-success" type="submit">@localize('Save')</button>
     </div>
 </form>
+
+<script>
+    sumoselectAjaxInit('#license_type_ids');
+</script>
+

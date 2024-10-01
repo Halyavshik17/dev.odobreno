@@ -61,7 +61,10 @@ class DriverController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            'license_type_id' => 'required|integer',
+            //'license_type_id' => 'required|integer',
+            // Множественный выбор прав
+            'license_type_ids' => 'required|array', 
+            'license_type_ids.*' => 'integer|exists:license_types,id',
             'license_num' => 'required|string|max:255',
             'license_issue_date' => 'required|date',
             'nid' => 'required|string|max:255',
@@ -102,10 +105,12 @@ class DriverController extends Controller
     public function edit(Driver $driver)
     {
         $license_types = LicenseType::all();
+        $selectedLicenseTypes = $driver->licenseTypes()->pluck('id')->toArray();
 
         return view('employee::driver.create_edit', [
             'item' => $driver,
             'license_types' => $license_types,
+            'selectedLicenseTypes' => $selectedLicenseTypes,
         ])->render();
     }
 
@@ -120,7 +125,10 @@ class DriverController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            'license_type_id' => 'required|integer',
+            //'license_type_id' => 'required|integer',
+            // Множественный выбор прав
+            'license_type_ids' => 'required|array', 
+            'license_type_ids.*' => 'integer|exists:license_types,id',
             'license_num' => 'required|string|max:255',
             'license_issue_date' => 'required|date',
             'nid' => 'required|string|max:255',
@@ -140,6 +148,7 @@ class DriverController extends Controller
         }
 
         $driver->update($data);
+        $driver->licenseTypes()->sync($data['license_type_ids']);
 
         return response()->json(['success' => 'Driver updated successfully.']);
     }

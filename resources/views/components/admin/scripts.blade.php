@@ -7,6 +7,7 @@
 {{-- <script src="{{ nanopkg_asset('vendor/highlight/highlight.min.js') }}"></script> --}}
 <script src="{{ admin_asset('vendor/metisMenu/metisMenu.min.js') }}"></script>
 <script src="{{ admin_asset('vendor/perfect-scrollbar/dist/perfect-scrollbar.min.js') }}"></script>
+<script src="{{ admin_asset('vendor/jquery.sumoselect/jquery.sumoselect.min.js') }}"></script>
 <script src="{{ nanopkg_asset('vendor/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ nanopkg_asset('vendor/fontawesome-free-6.3.0-web/js/all.min.js') }}"></script>
 <script src="{{ nanopkg_asset('vendor/toastr/build/toastr.min.js') }}"></script>

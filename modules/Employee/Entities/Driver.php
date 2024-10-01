@@ -14,7 +14,7 @@ class Driver extends Model
         'name',
         'driver_code',
         'phone',
-        'license_type_id',
+        //'license_type_id',
         'license_num',
         'license_issue_date',
         'nid',
@@ -52,5 +52,10 @@ class Driver extends Model
     public function getAvatarUrlAttribute(): ?string
     {
         return $this->avatar_path ? storage_asset($this->avatar_path) : null;
+    }
+
+    public function licenseTypes()
+    {
+        return $this->belongsToMany(LicenseType::class, 'driver_license_types', 'driver_id', 'license_type_id');
     }
 }

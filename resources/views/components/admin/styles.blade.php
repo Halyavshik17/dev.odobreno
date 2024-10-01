@@ -5,6 +5,7 @@
 <link href="{{ admin_asset('vendor/themify-icons/themify-icons.min.css') }}" rel="stylesheet">
 <link href="{{ admin_asset('vendor/material_icons/materia_icons.css') }}" rel="stylesheet">
 <link href="{{ admin_asset('vendor/emojionearea/dist/emojionearea.min.css') }}" rel="stylesheet">
+<link href="{{ admin_asset('vendor/jquery.sumoselect/sumoselect.min.css') }}" rel="stylesheet">
 @stack('lib-styles')
 <link rel="stylesheet" href="{{ nanopkg_asset('vendor/highlight/highlight.min.css') }}">
 <link href="{{ nanopkg_asset('vendor/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet">

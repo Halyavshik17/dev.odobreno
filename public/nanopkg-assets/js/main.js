@@ -248,6 +248,13 @@ function axiosModal(
             modalContent.empty();
             // set modal body content
             modalContent.html(response.data);
+
+            // Шизофрения
+            modalContent.find('.sumoselect-init').each(function() {
+                sumoselectAjaxInit(this); // Инициализация для каждого конкретного селектора
+            });
+            
+            
             // create a custom event
             const axiosModalSuccess = new Event("axiosModalSuccess");
             // Fire the event
@@ -371,5 +378,15 @@ function select2AjaxInit(element, modal = null) {
         },
         // modal: true,
         dropdownParent: modal ? $(modal) : null,
+    });
+}
+
+function sumoselectAjaxInit(element) {
+    $(element).SumoSelect({
+        placeholder: 'Please Select One',
+        search: true,
+        searchText: 'Search...',
+        noMatch: 'No results found',
+        csvDispCount: 3
     });
 }
