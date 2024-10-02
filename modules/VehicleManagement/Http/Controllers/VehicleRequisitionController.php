@@ -43,10 +43,12 @@ class VehicleRequisitionController extends Controller
         $employees = Employee::all();
         $vehicle_types = VehicleType::all();
 
-        return $dataTable->render('vehiclemanagement::requisition.vehicle_requisition.index', [
-            'employees' => $employees,
-            'vehicle_types' => $vehicle_types,
-        ]);
+        // return $dataTable->render('vehiclemanagement::requisition.vehicle_requisition.index', [
+        //     'employees' => $employees,
+        //     'vehicle_types' => $vehicle_types,
+        // ]);
+
+        return abort(404);
     }
 
     /**
@@ -54,13 +56,14 @@ class VehicleRequisitionController extends Controller
      */
     public function create()
     {
+        return abort(404);
 
-        return view('vehiclemanagement::requisition.vehicle_requisition.create_edit', [
-            'employees' => Employee::all(),
-            'vehicle_types' => VehicleType::where('is_active', true)->get(),
-            'drivers' => Driver::where('is_active', true)->get(),
-            'purposes' => VehicleRequisitionPurpose::where('is_active', true)->get(),
-        ])->render();
+        // return view('vehiclemanagement::requisition.vehicle_requisition.create_edit', [
+        //     'employees' => Employee::all(),
+        //     'vehicle_types' => VehicleType::where('is_active', true)->get(),
+        //     'drivers' => Driver::where('is_active', true)->get(),
+        //     'purposes' => VehicleRequisitionPurpose::where('is_active', true)->get(),
+        // ])->render();
     }
 
     /**
@@ -95,14 +98,15 @@ class VehicleRequisitionController extends Controller
      */
     public function edit(VehicleRequisition $requisition)
     {
+        return abort(404);
 
-        return view('vehiclemanagement::requisition.vehicle_requisition.create_edit', [
-            'item' => $requisition,
-            'employees' => Employee::all(),
-            'vehicle_types' => VehicleType::where('is_active', true)->get(),
-            'drivers' => Driver::where('is_active', true)->get(),
-            'purposes' => VehicleRequisitionPurpose::where('is_active', true)->get(),
-        ])->render();
+        // return view('vehiclemanagement::requisition.vehicle_requisition.create_edit', [
+        //     'item' => $requisition,
+        //     'employees' => Employee::all(),
+        //     'vehicle_types' => VehicleType::where('is_active', true)->get(),
+        //     'drivers' => Driver::where('is_active', true)->get(),
+        //     'purposes' => VehicleRequisitionPurpose::where('is_active', true)->get(),
+        // ])->render();
     }
 
     /**

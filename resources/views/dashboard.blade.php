@@ -35,7 +35,7 @@
                                             class="float-end text-success"><strong>{{ $total_requisitions }}</strong></span></a>
                                 </div>
                             @endcan
-                            @can('vehicle_maintenance_management')
+                            {{-- @can('vehicle_maintenance_management')
                                 <div>
                                     <svg width="25" height="25" viewBox="0 0 30 30" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,7 @@
                                         @localize('On Maintenance') <span
                                             class="float-end text-success"><strong>{{ $total_maintenances }}</strong></span></a>
                                 </div>
-                            @endcan
+                            @endcan --}}
                             {{-- @can('inventory_stock_management')
                                 <div>
                                     <svg width="25" height="25" viewBox="0 0 30 30" fill="none"

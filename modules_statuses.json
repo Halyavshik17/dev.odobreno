@@ -5,11 +5,11 @@
     "Language": true,
     "Permission": true,
     "Purchase": false,
-    "Report": true,
+    "Report": false,
     "Role": true,
     "Setting": true,
     "User": true,
-    "VehicleMaintenance": true,
+    "VehicleMaintenance": false,
     "VehicleManagement": true,
     "VehicleRefueling": false,
     "Companies": true

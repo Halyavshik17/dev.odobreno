@@ -38,11 +38,13 @@ class VehicleRequisitionPurposeController extends Controller
      */
     public function index(RequisitionPurposeDataTable $dataTable)
     {
-        \cs_set('theme', [
-            'description' => 'Display a listing of Vehicle requisition Purpose in Database.',
-        ]);
+        return abort(404);
 
-        return $dataTable->render('vehiclemanagement::requisition.purpose.index');
+        // \cs_set('theme', [
+        //     'description' => 'Display a listing of Vehicle requisition Purpose in Database.',
+        // ]);
+
+        // return $dataTable->render('vehiclemanagement::requisition.purpose.index');
     }
 
     /**
@@ -50,7 +52,9 @@ class VehicleRequisitionPurposeController extends Controller
      */
     public function create()
     {
-        return view('vehiclemanagement::requisition.purpose.create_edit')->render();
+        return abort(404);
+
+        //return view('vehiclemanagement::requisition.purpose.create_edit')->render();
     }
 
     /**
@@ -60,14 +64,16 @@ class VehicleRequisitionPurposeController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:vehicle_requisition_purposes,name',
-            'description' => 'nullable|string',
-            'is_active' => 'required|boolean',
-        ]);
-        $item = VehicleRequisitionPurpose::create($data);
+        return abort(404);
 
-        return response()->success($item, localize('Purpose Created Successfully'), 201);
+        // $data = $request->validate([
+        //     'name' => 'required|string|max:255|unique:vehicle_requisition_purposes,name',
+        //     'description' => 'nullable|string',
+        //     'is_active' => 'required|boolean',
+        // ]);
+        // $item = VehicleRequisitionPurpose::create($data);
+
+        // return response()->success($item, localize('Purpose Created Successfully'), 201);
     }
 
     /**
@@ -77,7 +83,9 @@ class VehicleRequisitionPurposeController extends Controller
      */
     public function edit(VehicleRequisitionPurpose $purpose)
     {
-        return view('vehiclemanagement::requisition.purpose.create_edit', ['item' => $purpose])->render();
+        return abort(404);
+
+        // return view('vehiclemanagement::requisition.purpose.create_edit', ['item' => $purpose])->render();
     }
 
     /**
@@ -87,14 +95,16 @@ class VehicleRequisitionPurposeController extends Controller
      */
     public function update(VehicleRequisitionPurpose $purpose, Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:vehicle_requisition_purposes,name,' . $purpose->id . ',id',
-            'description' => 'nullable|string',
-            'is_active' => 'required|boolean',
-        ]);
-        $purpose->update($data);
+        return abort(404);
 
-        return response()->success($purpose, localize('Item Updated Successfully'), 200);
+        // $data = $request->validate([
+        //     'name' => 'required|string|max:255|unique:vehicle_requisition_purposes,name,' . $purpose->id . ',id',
+        //     'description' => 'nullable|string',
+        //     'is_active' => 'required|boolean',
+        // ]);
+        // $purpose->update($data);
+
+        // return response()->success($purpose, localize('Item Updated Successfully'), 200);
     }
 
     /**
@@ -104,8 +114,8 @@ class VehicleRequisitionPurposeController extends Controller
      */
     public function destroy(VehicleRequisitionPurpose $purpose)
     {
-
-        $purpose->delete();
-        return response()->success(null, localize('Purpose Deleted Successfully'), 200);
+        return abort(404);
+        //$purpose->delete();
+        //return response()->success(null, localize('Purpose Deleted Successfully'), 200);
     }
 }

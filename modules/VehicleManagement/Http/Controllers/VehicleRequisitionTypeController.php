@@ -43,11 +43,13 @@ class VehicleRequisitionTypeController extends Controller
      */
     public function index(VehicleRequisitionTypeDataTable $dataTable)
     {
-        \cs_set('theme', [
-            'description' => 'Display a listing of Vehicle requisition Type in Database.',
-        ]);
+        return abort(404);
 
-        return $dataTable->render('vehiclemanagement::requisition.type.index');
+        // \cs_set('theme', [
+        //     'description' => 'Display a listing of Vehicle requisition Type in Database.',
+        // ]);
+
+        // return $dataTable->render('vehiclemanagement::requisition.type.index');
     }
 
     /**
@@ -57,7 +59,9 @@ class VehicleRequisitionTypeController extends Controller
      */
     public function create()
     {
-        return view('vehiclemanagement::requisition.type.create_edit')->render();
+        return abort(404);
+
+        //return view('vehiclemanagement::requisition.type.create_edit')->render();
     }
 
     /**
@@ -67,14 +71,16 @@ class VehicleRequisitionTypeController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:vehicle_requisition_types,name',
-            'description' => 'nullable|string',
-            'is_active' => 'required|boolean',
-        ]);
-        $item = VehicleRequisitionType::create($data);
+        return abort(404);
 
-        return response()->success($item, localize('Item Created Successfully'), 201);
+        // $data = $request->validate([
+        //     'name' => 'required|string|max:255|unique:vehicle_requisition_types,name',
+        //     'description' => 'nullable|string',
+        //     'is_active' => 'required|boolean',
+        // ]);
+        // $item = VehicleRequisitionType::create($data);
+
+        // return response()->success($item, localize('Item Created Successfully'), 201);
     }
 
     /**
@@ -84,7 +90,9 @@ class VehicleRequisitionTypeController extends Controller
      */
     public function edit(VehicleRequisitionType $type)
     {
-        return view('vehiclemanagement::requisition.type.create_edit', ['item' => $type])->render();
+        return abort(404);
+
+        //return view('vehiclemanagement::requisition.type.create_edit', ['item' => $type])->render();
     }
 
     /**
@@ -94,14 +102,16 @@ class VehicleRequisitionTypeController extends Controller
      */
     public function update(VehicleRequisitionType $type, Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:vehicle_requisition_types,name,' . $type->id . ',id',
-            'description' => 'nullable|string',
-            'is_active' => 'required|boolean',
-        ]);
-        $type->update($data);
+        return abort(404);
+        
+        // $data = $request->validate([
+        //     'name' => 'required|string|max:255|unique:vehicle_requisition_types,name,' . $type->id . ',id',
+        //     'description' => 'nullable|string',
+        //     'is_active' => 'required|boolean',
+        // ]);
+        // $type->update($data);
 
-        return response()->success($type, localize('Item Updated Successfully'), 200);
+        // return response()->success($type, localize('Item Updated Successfully'), 200);
     }
 
     /**
@@ -111,8 +121,9 @@ class VehicleRequisitionTypeController extends Controller
      */
     public function destroy(VehicleRequisitionType $type)
     {
+        return abort(404);
 
-        $type->delete();
-        return response()->success(null, localize('Item Deleted Successfully'), 200);
+        // $type->delete();
+        // return response()->success(null, localize('Item Deleted Successfully'), 200);
     }
 }

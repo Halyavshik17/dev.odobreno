@@ -239,8 +239,8 @@
                 @endif
 
 
-                {{-- Vehicle Maintenance --}}
-                {{-- @if (module_active('VehicleMaintenance') &&
+                {{-- Vehicle Maintenance | Работы --}} 
+                @if (module_active('VehicleMaintenance') &&
                         (can('vehicle_maintenance_management') || can('vehicle_maintenance_type_management')))
                     <x-admin.multi-nav>
                         <x-slot name="title">
@@ -269,7 +269,7 @@
                             </x-admin.nav-link>
                         @endcan
                     </x-admin.multi-nav>
-                @endif --}}
+                @endif
 
 
                 {{-- Vehicle Insurance --}}
@@ -460,6 +460,7 @@
                             </div>
                             {{ localize('Reports') }}
                         </x-slot>
+                        
                         {{-- @can('employee_report')
                             <x-admin.nav-link href="{{ route('admin.report.employee') }}">
                                 {{ localize('Employee Report') }}

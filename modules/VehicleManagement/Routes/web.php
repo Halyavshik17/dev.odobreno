@@ -49,8 +49,9 @@ Route::prefix('admin/vehicle')->as('admin.vehicle.')->group(function () {
         // type
         Route::resource('/type', 'VehicleOwnershipTypeController')->except(['show']);
     });
-
-    // requisition
+    
+    
+    // requisition Запросы ТС
     Route::prefix('requisition')->as('requisition.')->group(function () {
         // type
         Route::resource('/type', 'VehicleRequisitionTypeController')->except(['show']);
