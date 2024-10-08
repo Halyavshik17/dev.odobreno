@@ -7,6 +7,9 @@ use Illuminate\Routing\Controller;
 use Modules\Employee\DataTables\DriverDataTable;
 use Modules\Employee\Entities\Driver;
 use Modules\Employee\Entities\LicenseType;
+use Modules\Companies\Entities\Company;
+
+use App\Models\User;
 
 class DriverController extends Controller
 {
@@ -45,11 +48,27 @@ class DriverController extends Controller
      */
     public function create()
     {
-        $license_types = LicenseType::all();
+        $is_creatable = true;
 
-        return view('employee::driver.create_edit', [
-            'license_types' => $license_types,
-        ])->render();
+        $license_types = LicenseType::all();
+        if(canManageSettings())
+        {
+            $companies = Company::all();
+            return view('employee::driver.create_edit', [
+                'license_types' => $license_types,
+                'companies' => $companies,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
+        else
+        {
+            $company = getFirstCompanyUser();
+            return view('employee::driver.create_edit', [
+                'license_types' => $license_types,
+                'company' => $company,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
     }
 
     /**
@@ -57,35 +76,59 @@ class DriverController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Валидация входящих данных
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            //'license_type_id' => 'required|integer',
-            // Множественный выбор прав
-            'license_type_ids' => 'required|array', 
+            'license_type_ids' => 'required|array',
             'license_type_ids.*' => 'integer|exists:license_types,id',
             'license_num' => 'required|string|max:255',
             'license_issue_date' => 'required|date',
             'nid' => 'required|string|max:255',
-            'dob' => 'required',
-            'joining_date' => 'required',
+            'dob' => 'required|date',
+            'joining_date' => 'required|date',
             'working_time_slot' => 'nullable|string|max:255',
             'present_address' => 'nullable|string|max:255',
             'permanent_address' => 'nullable|string|max:255',
             'leave_status' => 'required|boolean',
+            'is_active' => 'nullable|boolean',
+            'picture' => 'nullable|image|max:2048',
         ]);
-
+    
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+    
         $data['is_active'] = $request->has('is_active') ? 1 : 0;
-
+    
         if ($request->hasFile('picture')) {
             $data['avatar_path'] = upload_file($request, 'picture', 'driver');
         }
-
-        $item = Driver::create($data);
-
+    
+        // Создаем нового водителя
+        $driver = Driver::create($data);
+    
+        $driver->licenseTypes()->sync($data['license_type_ids']);
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $driver->companies()->sync($company->id);
+        }
+        else {
+            $driver->companies()->sync($data['company_id']);
+        }
+    
         return response()->json(['success' => 'Driver created successfully.']);
     }
+    
 
     /**
      * Show the specified resource.
@@ -104,13 +147,19 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
+        $is_creatable = false;
+
         $license_types = LicenseType::all();
         $selectedLicenseTypes = $driver->licenseTypes()->pluck('id')->toArray();
 
+        $company = $driver->primaryCompany();
+
         return view('employee::driver.create_edit', [
             'item' => $driver,
+            'company' => $company,
             'license_types' => $license_types,
             'selectedLicenseTypes' => $selectedLicenseTypes,
+            'is_creatable' => $is_creatable,
         ])->render();
     }
 
@@ -125,8 +174,6 @@ class DriverController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            //'license_type_id' => 'required|integer',
-            // Множественный выбор прав
             'license_type_ids' => 'required|array', 
             'license_type_ids.*' => 'integer|exists:license_types,id',
             'license_num' => 'required|string|max:255',
@@ -138,8 +185,21 @@ class DriverController extends Controller
             'present_address' => 'nullable|string|max:255',
             'permanent_address' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean',
-            'leave_status' => 'required|boolean',
+            'leave_status' => 'required|boolean'
         ]);
+
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
 
         $data['is_active'] = $request->has('is_active') ? 1 : 0;
 
@@ -147,8 +207,18 @@ class DriverController extends Controller
             $data['avatar_path'] = upload_file($request, 'picture', 'driver');
         }
 
-        $driver->update($data);
         $driver->licenseTypes()->sync($data['license_type_ids']);
+
+        // если не админ, обновляем с текущей компанией
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $driver->companies()->sync($company->id);
+        }
+        else {
+            $driver->companies()->sync($data['company_id']);
+        }
+
+        $driver->update($data);
 
         return response()->json(['success' => 'Driver updated successfully.']);
     }

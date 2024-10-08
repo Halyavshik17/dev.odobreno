@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Employee\Database\factories\DriverFactory;
 
+use Modules\Companies\Entities\Company;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Driver extends Model
 {
     use HasFactory;
@@ -57,5 +61,15 @@ class Driver extends Model
     public function licenseTypes()
     {
         return $this->belongsToMany(LicenseType::class, 'driver_license_types', 'driver_id', 'license_type_id');
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'company_drivers', 'driver_id', 'company_id');
+    }
+
+    public function primaryCompany(): ?Company
+    {
+        return $this->companies()->first();
     }
 }

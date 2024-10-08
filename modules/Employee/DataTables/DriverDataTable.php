@@ -45,9 +45,25 @@ class DriverDataTable extends DataTable
      */
     public function query(Driver $model): QueryBuilder
     {
-        $query = $model->newQuery();
+        if(canManageSettings())
+        {
+            $query = $model->newQuery();
 
-        return $query;
+            return $query;
+        }
+        else
+        {
+            $user = auth()->user();
+            $company = $user->companies->first();
+        
+            // Формируем запрос с соединением
+            $query = $model->newQuery()
+                ->join('company_drivers', 'drivers.id', '=', 'company_drivers.driver_id')
+                ->where('company_drivers.company_id', $company->id)
+                ->select('drivers.*'); // Выбираем все поля из таблицы drivers
+        
+            return $query;
+        }
     }
 
     /**

@@ -529,3 +529,19 @@ function stripScriptsTag($input)
 
     return $input;
 }
+
+// Проверяем наличие доступа к настройке setting_management уник кей
+function canManageSettings()
+{
+    return auth()->check() && auth()->user()->can('setting_management');
+}
+// Получаем аутентифицированного юзера
+function getAuthUser()
+{
+    return auth()->user();
+}
+// Получаем первую попавшуюся компанию юзера (костыль временный)
+function getFirstCompanyUser()
+{
+    return getAuthUser()->companies->first();
+}
