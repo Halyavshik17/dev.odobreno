@@ -69,7 +69,18 @@ class EmployeeDataTable extends DataTable
         $join_date_from = $this->request()->get('join_date_from');
         $join_date_to = $this->request()->get('join_date_to');
 
+        // $query = $model->newQuery();
+
         $query = $model->newQuery();
+
+        if (!canManageSettings()) {
+            $user = auth()->user();
+            $company = $user->companies->first();
+
+            $query->join('company_employees', 'employees.id', '=', 'company_employees.employee_id')
+                  ->where('company_employees.company_id', $company->id)
+                  ->select('employees.*');
+        }
 
         $query->when($employee_type, function ($query) use ($employee_type) {
             return $query->where('payroll_type', 'like', '%'.$employee_type.'%');
@@ -132,10 +143,11 @@ class EmployeeDataTable extends DataTable
             Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
             Column::make('nid')->title(localize('NID'))->defaultContent('N/A'),
             Column::make('payroll_type')->title(localize('Type'))->defaultContent('N/A'),
+            // Подразделение
             Column::make('department')->title(localize('Department'))->defaultContent('N/A'),
             Column::make('position')->title(localize('Designation'))->defaultContent('N/A'),
             Column::make('phone')->title(localize('Phone'))->defaultContent('N/A'),
-            Column::make('blood_group')->title(localize('Blood Group'))->defaultContent('N/A'),
+            //Column::make('blood_group')->title(localize('Blood Group'))->defaultContent('N/A'),
             Column::computed('action')->title(localize('Action'))
                 ->orderable(false)
                 ->searchable(false)

@@ -74,21 +74,35 @@ class VehicleInsuranceCompanyDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        return [
-            Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
-            Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
-            Column::make('description')->title(localize('description'))->defaultContent('N/A'),
-            Column::make('is_active')->title(localize('status')),
-            Column::make('created_at')->title(localize('Created'))->defaultContent('N/A'),
-            Column::make('updated_at')->title(localize('Updated'))->defaultContent('N/A'),
-            Column::computed('action')
-                ->title(localize('Action'))
-                ->searchable(false)
-                ->exportable(false)
-                ->printable(false)
-                ->width(80)
-                ->addClass('text-center'),
-        ];
+        if(canManageSettings())
+        {
+            return [
+                Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
+                Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
+                Column::make('description')->title(localize('description'))->defaultContent('N/A'),
+                Column::make('is_active')->title(localize('status')),
+                Column::make('created_at')->title(localize('Created'))->defaultContent('N/A'),
+                Column::make('updated_at')->title(localize('Updated'))->defaultContent('N/A'),
+                Column::computed('action')
+                    ->title(localize('Action'))
+                    ->searchable(false)
+                    ->exportable(false)
+                    ->printable(false)
+                    ->width(80)
+                    ->addClass('text-center'),
+            ];
+        }
+        else 
+        {
+            return [
+                Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
+                Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
+                Column::make('description')->title(localize('description'))->defaultContent('N/A'),
+                Column::make('is_active')->title(localize('status')),
+                Column::make('created_at')->title(localize('Created'))->defaultContent('N/A'),
+                Column::make('updated_at')->title(localize('Updated'))->defaultContent('N/A'),
+            ];
+        }
     }
 
     /**

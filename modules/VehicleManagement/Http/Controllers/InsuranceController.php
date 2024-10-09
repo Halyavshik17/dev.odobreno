@@ -10,6 +10,8 @@ use Modules\VehicleManagement\Entities\Vehicle;
 use Modules\VehicleManagement\Entities\VehicleInsuranceCompany;
 use Modules\VehicleManagement\Entities\VehicleInsuranceRecurringPeriod;
 
+use Modules\Companies\Entities\Company;
+
 class InsuranceController extends Controller
 {
     public function __construct()
@@ -46,7 +48,7 @@ class InsuranceController extends Controller
         ]);
 
         return $dataTable->render('vehiclemanagement::insurance.index', [
-            'companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
+            'insurance_companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
             'vehicles' => Vehicle::all(),
         ]);
     }
@@ -56,11 +58,30 @@ class InsuranceController extends Controller
      */
     public function create()
     {
-        return view('vehiclemanagement::insurance.create_edit', [
-            'companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
-            'vehicles' => Vehicle::all(),
-            'recurring_periods' => VehicleInsuranceRecurringPeriod::where('is_active', 1)->get(),
-        ])->render();
+        $is_creatable = true;
+
+        if(canManageSettings())
+        {
+            $companies = Company::all();
+            return view('vehiclemanagement::insurance.create_edit', [
+                'insurance_companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
+                'vehicles' => Vehicle::all(),
+                'recurring_periods' => VehicleInsuranceRecurringPeriod::where('is_active', 1)->get(),
+                'companies' => $companies,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
+        else
+        {
+            $company = getFirstCompanyUser();
+            return view('vehiclemanagement::insurance.create_edit', [
+                'insurance_companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
+                'vehicles' => Vehicle::all(),
+                'recurring_periods' => VehicleInsuranceRecurringPeriod::where('is_active', 1)->get(),
+                'company' => $company,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
     }
 
     /**
@@ -69,7 +90,7 @@ class InsuranceController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'company_id' => 'required|integer',
+            'insurance_company_id' => 'required|integer',
             'vehicle_id' => 'required|integer',
             'policy_number' => 'required|string|max:255',
             'start_date' => 'nullable|date',
@@ -88,7 +109,28 @@ class InsuranceController extends Controller
             $data['policy_document_path'] = upload_file($request, 'policy_document', 'insurance_policy_documents');
         }
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         $item = Insurance::create($data);
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $item->companies()->sync($company->id);
+        }
+        else {
+            $item->companies()->sync($data['company_id']);
+        }
 
         return response()->success($item, localize('Insurance Added Successfully'), 201);
     }
@@ -100,11 +142,16 @@ class InsuranceController extends Controller
      */
     public function edit(Insurance $insurance)
     {
+        $is_creatable = false;
+        $company = $insurance->primaryCompany();
+
         return view('vehiclemanagement::insurance.create_edit', [
-            'companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
+            'insurance_companies' => VehicleInsuranceCompany::where('is_active', 1)->get(),
             'vehicles' => Vehicle::all(),
             'recurring_periods' => VehicleInsuranceRecurringPeriod::where('is_active', 1)->get(),
             'item' => $insurance,
+            'company' => $company,
+            'is_creatable' => $is_creatable,
         ])->render();
     }
 
@@ -115,7 +162,7 @@ class InsuranceController extends Controller
     {
 
         $data = $request->validate([
-            'company_id' => 'required|integer',
+            'insurance_company_id' => 'required|integer',
             'vehicle_id' => 'required|integer',
             'policy_number' => 'required|string|max:255',
             'start_date' => 'nullable|date',
@@ -137,6 +184,27 @@ class InsuranceController extends Controller
             }
         }
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $insurance->companies()->sync($company->id);
+        }
+        else {
+            $insurance->companies()->sync($data['company_id']);
+        }
+
         $insurance->update($data);
 
         return response()->success($insurance, localize('Insurance Updated Successfully'), 200);
@@ -147,9 +215,6 @@ class InsuranceController extends Controller
      */
     public function destroy(Insurance $insurance)
     {
-
-
-
         if ($insurance->policy_document_path) {
             delete_file($insurance->policy_document_path);
         }

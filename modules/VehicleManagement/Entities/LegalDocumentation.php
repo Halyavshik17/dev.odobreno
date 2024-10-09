@@ -4,7 +4,10 @@ namespace Modules\VehicleManagement\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Inventory\Entities\Vendor;
+use Modules\VehicleManagement\Entities\Vendor;
+
+use Modules\Companies\Entities\Company;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegalDocumentation extends Model
 {
@@ -63,5 +66,15 @@ class LegalDocumentation extends Model
     public function getDocumentFileUrlAttribute(): ?string
     {
         return $this->document_file_path ? storage_asset($this->document_file_path) : null;
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'company_legal_documentations', 'legal_documentation_id', 'company_id');
+    }
+
+    public function primaryCompany(): ?Company
+    {
+        return $this->companies()->first();
     }
 }

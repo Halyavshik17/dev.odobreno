@@ -40,7 +40,25 @@ class PositionDataTable extends DataTable
      */
     public function query(Position $model): QueryBuilder
     {
-        return $model->newQuery();
+        if(canManageSettings())
+        {
+            $query = $model->newQuery();
+
+            return $query;
+        }
+        else
+        {
+            $user = auth()->user();
+            $company = $user->companies->first();
+        
+            // Формируем запрос с соединением
+            $query = $model->newQuery()
+                ->join('company_positions', 'positions.id', '=', 'company_positions.position_id')
+                ->where('company_positions.company_id', $company->id)
+                ->select('positions.*'); // Выбираем все поля из таблицы drivers
+        
+            return $query;
+        }
     }
 
     /**

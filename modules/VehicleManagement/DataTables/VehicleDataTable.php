@@ -59,26 +59,36 @@ class VehicleDataTable extends DataTable
         $date_from = $this->request()->get('date_from');
         $date_to = $this->request()->get('date_to');
 
-        $query = $model->newQuery()
-            ->when($department, function ($query) use ($department) {
-                $query->where('department_id', $department);
-            })
-            ->when($vehicle_type, function ($query) use ($vehicle_type) {
-                $query->where('vehicle_type_id', $vehicle_type);
-            })
-            ->when($ownership, function ($query) use ($ownership) {
-                $query->where('ownership_id', $ownership);
-            })
-            ->when($vendor, function ($query) use ($vendor) {
-                $query->where('vendor_id', $vendor);
-            })
-            ->when($date_from, function ($query) use ($date_from) {
-                $query->whereDate('requisition_date', '>=', $date_from);
-            })
-            ->when($date_to, function ($query) use ($date_to) {
-                $query->whereDate('requisition_date', '<=', $date_to);
-            });
+        $query = $model->newQuery();
 
+        if (!canManageSettings()) {
+            $user = auth()->user();
+            $company = $user->companies->first();
+
+            $query->join('company_vehicles', 'vehicles.id', '=', 'company_vehicles.vehicle_id')
+                  ->where('company_vehicles.company_id', $company->id)
+                  ->select('vehicles.*');
+        }
+
+        $query->when($department, function ($query) use ($department) {
+            $query->where('department_id', $department);
+        })
+        ->when($vehicle_type, function ($query) use ($vehicle_type) {
+            $query->where('vehicle_type_id', $vehicle_type);
+        })
+        ->when($ownership, function ($query) use ($ownership) {
+            $query->where('ownership_id', $ownership);
+        })
+        ->when($vendor, function ($query) use ($vendor) {
+            $query->where('vendor_id', $vendor);
+        })
+        ->when($date_from, function ($query) use ($date_from) {
+            $query->whereDate('requisition_date', '>=', $date_from);
+        })
+        ->when($date_to, function ($query) use ($date_to) {
+            $query->whereDate('requisition_date', '<=', $date_to);
+        });
+        
         return $query;
     }
 

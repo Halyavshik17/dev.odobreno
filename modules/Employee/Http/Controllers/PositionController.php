@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller;
 use Modules\Employee\DataTables\PositionDataTable;
 use Modules\Employee\Entities\Position;
 
+use Modules\Companies\Entities\Company;
+
 class PositionController extends Controller
 {
     public function __construct()
@@ -44,7 +46,26 @@ class PositionController extends Controller
      */
     public function create()
     {
-        return view('employee::position.create_edit')->render();
+        $is_creatable = true;
+
+        if(canManageSettings())
+        {
+            $companies = Company::all();
+            return view('employee::position.create_edit', [
+                'companies' => $companies,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
+        else
+        {
+            $company = getFirstCompanyUser();
+            return view('employee::position.create_edit', [
+                'company' => $company,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
+
+        // return view('employee::position.create_edit')->render();
     }
 
     /**
@@ -56,7 +77,29 @@ class PositionController extends Controller
             'name' => 'required|string|max:255|unique:positions,name',
             'description' => 'nullable|string',
         ]);
+
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         $item = Position::create($data);
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $item->companies()->sync($company->id);
+        }
+        else {
+            $item->companies()->sync($data['company_id']);
+        }
 
         return response()->success($item, localize('Position Created Successfully'), 201);
     }
@@ -78,7 +121,15 @@ class PositionController extends Controller
      */
     public function edit(Position $position)
     {
-        return view('employee::position.create_edit', ['item' => $position])->render();
+        $is_creatable = false;
+
+        $company = $position->primaryCompany();
+
+        return view('employee::position.create_edit', [
+            'item' => $position,
+            'company' => $company,
+            'is_creatable' => $is_creatable,
+        ])->render();
     }
 
     /**
@@ -92,7 +143,29 @@ class PositionController extends Controller
             'name' => 'required|string|max:255|unique:positions,name,' . $position->id . ',id',
             'description' => 'nullable|string',
         ]);
+
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         $position->update($data);
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $position->companies()->sync($company->id);
+        }
+        else {
+            $position->companies()->sync($data['company_id']);
+        }
 
         return response()->success($position, 'Position Updated Successfully.', 200);
     }

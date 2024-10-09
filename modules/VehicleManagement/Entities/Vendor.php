@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Inventory\Entities;
+namespace Modules\VehicleManagement\Entities;
 
 use App\Traits\FormatTimestamps;
 use App\Traits\GenerateCode;

@@ -73,7 +73,7 @@ class LicenseTypeDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        if(auth()->user()->can("setting_management"))
+        if(canManageSettings())
         {
             return [
                 Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),

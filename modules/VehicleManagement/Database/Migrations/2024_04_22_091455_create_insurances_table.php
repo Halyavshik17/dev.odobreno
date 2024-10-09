@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::create('insurances', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('insurance_company_id');
             $table->unsignedBigInteger('vehicle_id')->nullable();
             $table->string('policy_number')->nullable();
             $table->date('start_date')->nullable();

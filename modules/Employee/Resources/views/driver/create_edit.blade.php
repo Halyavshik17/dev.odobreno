@@ -188,7 +188,7 @@
                             <label for="company_id" class="col-sm-5 col-form-label">@localize('Company')</label>
                             <div class="col-sm-7">
                                 <input name="company_id" id="company_id" class="form-control" type="text" value="{{ $company->name }}" readonly>
-                                {{-- <input type="hidden" name="company_id" value="{{ $company->id }}"> --}}
+                                <input type="hidden" name="company_id" id="company_id" value="{{ $company->id }}">
                             </div>
                         </div>
                     @endif
@@ -199,7 +199,7 @@
                         <label for="company_id" class="col-sm-5 col-form-label">@localize('Company')</label>
                         <div class="col-sm-7">
                             <input name="company_id" id="company_id" class="form-control" type="text" value="{{ $company->name }}" readonly>
-                            {{-- <input type="hidden" name="company_id" value="{{ $company->id }}"> --}}
+                            <input type="hidden" name="company_id" id="company_id" value="{{ $company->id }}">
                         </div>
                     </div>
                 @endif

@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Inventory\DataTables;
+namespace Modules\VehicleManagement\DataTables;
 
 use App\Traits\RemovePrefixFromSearch;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Modules\Inventory\Entities\Vendor;
+use Modules\VehicleManagement\Entities\Vendor;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -82,23 +82,39 @@ class VendorDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        return [
-            Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
-            Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
-            Column::make('email')->title(localize('Email'))->defaultContent('N/A'),
-            Column::make('phone')->title(localize('Phone'))->defaultContent('N/A'),
-            Column::make('address')->title(localize('Address'))->defaultContent('N/A'),
-            Column::make('is_active')->title(localize('status')),
-            Column::make('created_at')->title(localize('Created'))->defaultContent('N/A'),
-            Column::make('updated_at')->title(localize('Updated'))->defaultContent('N/A'),
-            Column::computed('action')
-                ->title(localize('Action'))
-                ->searchable(false)
-                ->exportable(false)
-                ->printable(false)
-                ->width(80)
-                ->addClass('text-center'),
-        ];
+        if(canManageSettings())
+        {
+            return [
+                Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
+                Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
+                Column::make('email')->title(localize('Email'))->defaultContent('N/A'),
+                Column::make('phone')->title(localize('Phone'))->defaultContent('N/A'),
+                Column::make('address')->title(localize('Address'))->defaultContent('N/A'),
+                Column::make('is_active')->title(localize('status')),
+                Column::make('created_at')->title(localize('Created'))->defaultContent('N/A'),
+                Column::make('updated_at')->title(localize('Updated'))->defaultContent('N/A'),
+                Column::computed('action')
+                    ->title(localize('Action'))
+                    ->searchable(false)
+                    ->exportable(false)
+                    ->printable(false)
+                    ->width(80)
+                    ->addClass('text-center'),
+            ];
+        }
+        else
+        {
+            return [
+                Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
+                Column::make('name')->title(localize('Name'))->defaultContent('N/A'),
+                Column::make('email')->title(localize('Email'))->defaultContent('N/A'),
+                Column::make('phone')->title(localize('Phone'))->defaultContent('N/A'),
+                Column::make('address')->title(localize('Address'))->defaultContent('N/A'),
+                Column::make('is_active')->title(localize('status')),
+                Column::make('created_at')->title(localize('Created'))->defaultContent('N/A'),
+                Column::make('updated_at')->title(localize('Updated'))->defaultContent('N/A'),
+            ];
+        }
     }
 
     /**
@@ -106,6 +122,6 @@ class VendorDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'inventory-vendor-'.date('YmdHis');
+        return 'vehicle-vendor-'.date('YmdHis');
     }
 }

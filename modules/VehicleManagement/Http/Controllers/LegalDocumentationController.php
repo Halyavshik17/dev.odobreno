@@ -4,11 +4,13 @@ namespace Modules\VehicleManagement\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Inventory\Entities\Vendor;
+use Modules\VehicleManagement\Entities\Vendor;
 use Modules\VehicleManagement\DataTables\LegalDocumentationDataTable;
 use Modules\VehicleManagement\Entities\DocumentType;
 use Modules\VehicleManagement\Entities\LegalDocumentation;
 use Modules\VehicleManagement\Entities\Vehicle;
+
+use Modules\Companies\Entities\Company;
 
 class LegalDocumentationController extends Controller
 {
@@ -56,11 +58,30 @@ class LegalDocumentationController extends Controller
      */
     public function create()
     {
-        return view('vehiclemanagement::legal_documentation.create_edit', [
-            'document_types' => DocumentType::where('is_active', 1)->get(),
-            'vehicles' => Vehicle::all(),
-            'vendors' => Vendor::where('is_active', 1)->get(),
-        ])->render();
+        $is_creatable = true;
+
+        if(canManageSettings())
+        {
+            $companies = Company::all();
+            return view('vehiclemanagement::legal_documentation.create_edit', [
+                'document_types' => DocumentType::where('is_active', 1)->get(),
+                'vehicles' => Vehicle::all(),
+                'vendors' => Vendor::where('is_active', 1)->get(),
+                'companies' => $companies,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
+        else
+        {
+            $company = getFirstCompanyUser();
+            return view('vehiclemanagement::legal_documentation.create_edit', [
+                'document_types' => DocumentType::where('is_active', 1)->get(),
+                'vehicles' => Vehicle::all(),
+                'vendors' => Vendor::where('is_active', 1)->get(),
+                'company' => $company,
+                'is_creatable' => $is_creatable,
+            ])->render();
+        }
     }
 
     /**
@@ -84,7 +105,28 @@ class LegalDocumentationController extends Controller
             $data['document_file_path'] = upload_file($request, 'legal_document_file', 'legal_documents');
         }
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         $item = LegalDocumentation::create($data);
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $item->companies()->sync($company->id);
+        }
+        else {
+            $item->companies()->sync($data['company_id']);
+        }
 
         return response()->success($item, localize('Legal Documentation Added Successfully'), 201);
     }
@@ -94,11 +136,16 @@ class LegalDocumentationController extends Controller
      */
     public function edit(LegalDocumentation $legal_document)
     {
+        $is_creatable = false;
+        $company = $legal_document->primaryCompany();
+
         return view('vehiclemanagement::legal_documentation.create_edit', [
             'document_types' => DocumentType::where('is_active', 1)->get(),
             'vehicles' => Vehicle::all(),
             'vendors' => Vendor::where('is_active', 1)->get(),
             'item' => $legal_document,
+            'company' => $company,
+            'is_creatable' => $is_creatable,
         ])->render();
     }
 
@@ -128,6 +175,27 @@ class LegalDocumentationController extends Controller
             }
         }
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $legal_document->companies()->sync($company->id);
+        }
+        else {
+            $legal_document->companies()->sync($data['company_id']);
+        }
+
         $legal_document->update($data);
 
         return response()->success($legal_document, localize('Legal Documentation Updated Successfully'), 200);
@@ -138,9 +206,6 @@ class LegalDocumentationController extends Controller
      */
     public function destroy(LegalDocumentation $legal_document)
     {
-
-
-
         if ($legal_document->document_file_path) {
             delete_file($legal_document->document_file_path);
         }

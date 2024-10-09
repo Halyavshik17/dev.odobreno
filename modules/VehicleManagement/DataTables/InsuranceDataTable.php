@@ -28,9 +28,9 @@ class InsuranceDataTable extends DataTable
 
                 return $button;
             })
-            ->editColumn('company_id', function ($query) {
+            ->editColumn('insurance_company_id', function ($query) {
                 return $query->company?->name ?? 'N/A';
-            })->filterColumn('company_id', function ($query, $keyword) {
+            })->filterColumn('insurance_company_id', function ($query, $keyword) {
                 $query->whereHas('company', function ($query) use ($keyword) {
                     $query->where('name', 'like', '%'.$keyword.'%');
                 });
@@ -62,15 +62,30 @@ class InsuranceDataTable extends DataTable
      */
     public function query(Insurance $model): QueryBuilder
     {
-        $company = $this->request()->get('company_id');
+        $company = $this->request()->get('insurance_company_id');
         $vehicle = $this->request()->get('vehicle_id');
         $policy_number = $this->request()->get('policy_number');
         $date_from = $this->request()->get('date_from');
         $date_to = $this->request()->get('date_to');
 
-        $query = $model->newQuery()
+        $query = $model->newQuery();
+
+        if (!canManageSettings()) {
+            $user = auth()->user();
+            $company = $user->companies->first();
+
+            $query->join('company_insurances', 'insurances.id', '=', 'company_insurances.insurance_id')
+                  ->where('company_insurances.company_id', $company->id)
+                  ->select('insurances.*');
+
+            // $query->join('company_legal_documentations', 'legal_documentations.id', '=', 'company_legal_documentations.legal_documentation_id')
+            //       ->where('company_legal_documentations.company_id', $company->id)
+            //       ->select('legal_documentations.*');
+        }
+
+        $query
             ->when($company, function ($query) use ($company) {
-                $query->where('company_id', $company);
+                $query->where('insurance_company_id', $company);
             })
             ->when($vehicle, function ($query) use ($vehicle) {
                 $query->where('vehicle_id', $vehicle);
@@ -120,7 +135,7 @@ class InsuranceDataTable extends DataTable
     {
         return [
             Column::make('DT_RowIndex')->title(localize('SL'))->searchable(false)->orderable(false)->width(30)->addClass('text-center'),
-            Column::make('company_id')->title(localize('Policy Vendor Name'))->defaultContent('N/A'),
+            Column::make('insurance_company_id')->title(localize('Policy Vendor Name'))->defaultContent('N/A'),
             Column::make('vehicle_id')->title(localize('Vehicle Name'))->defaultContent('N/A'),
             Column::make('policy_number')->title(localize('Policy Number'))->defaultContent('N/A'),
             Column::make('start_date')->title(localize('Start Date'))->defaultContent('N/A'),

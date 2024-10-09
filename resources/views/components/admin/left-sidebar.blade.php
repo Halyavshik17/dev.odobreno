@@ -72,9 +72,9 @@
                         <x-admin.nav-link href="{{ route('admin.position.index') }}">
                             {{ localize('Position') }}
                         </x-admin.nav-link>
-                        {{-- <x-admin.nav-link href="{{ route('admin.department.index') }}">
+                        <x-admin.nav-link href="{{ route('admin.department.index') }}">
                             {{ localize('Department') }}
-                        </x-admin.nav-link> --}}
+                        </x-admin.nav-link>
                         <x-admin.nav-link href="{{ route('admin.driver.index') }}">
                             {{ localize('Manage Driver') }}
                         </x-admin.nav-link>
@@ -125,6 +125,13 @@
                                 {{ localize('Vehicle Type') }}
                             </x-admin.nav-link>
                         @endcan
+
+                        @can('vehicle_vendor_management')
+                            <x-admin.nav-link href="{{ route('admin.vehicle.vendor.index') }}">
+                                {{ localize('vendors') }}
+                            </x-admin.nav-link>
+                        @endcan
+
                         {{-- @can('vehicle_rta_office_management')
                             <x-admin.nav-link href="{{ route('admin.vehicle.rta-office.index') }}">
                                 {{ localize('RTA Office') }}
@@ -325,7 +332,7 @@
                             can('inventory_location_management') ||
                             can('inventory_parts_management') ||
                             can('inventory_parts_usage_management') ||
-                            can('inventory_vendor_management') ||
+                            can('vehicle_vendor_management') ||
                             can('expense_management') ||
                             can('expense_type_management') ||
                             can('trip_type_management')))
@@ -382,7 +389,7 @@
                                 {{ localize('Parts Usage') }}
                             </x-admin.nav-link>
                         @endcan
-                        @can('inventory_vendor_management')
+                        @can('vehicle_vendor_management')
                             <x-admin.nav-link href="{{ route('admin.inventory.vendor.index') }}">
                                 {{ localize('vendors') }}
                             </x-admin.nav-link>

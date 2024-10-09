@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Employee\Entities\Department;
 use Modules\Employee\Entities\Driver;
-use Modules\Inventory\Entities\Vendor;
+use Modules\VehicleManagement\Entities\Vendor;
+
+use Modules\Companies\Entities\Company;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Vehicle extends Model
 {
@@ -66,5 +69,15 @@ class Vehicle extends Model
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'company_vehicles', 'vehicle_id', 'company_id');
+    }
+
+    public function primaryCompany(): ?Company
+    {
+        return $this->companies()->first();
     }
 }

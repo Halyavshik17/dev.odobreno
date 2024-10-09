@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-card>
         <x-slot name='actions'>
-            @if(can('setting_management'))
+            @if(canManageSettings())
                 <a class="btn btn-success" href="javascript:void(0);"
                     onclick="axiosModal('{{ route(\config('theme.rprefix') . '.create') }}')">
                     <i class="fa fa-plus"></i>&nbsp;

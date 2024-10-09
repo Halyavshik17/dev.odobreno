@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Employee\Entities\Department;
 use Modules\Employee\Entities\Driver;
-use Modules\Inventory\Entities\Vendor;
+use Modules\VehicleManagement\Entities\Vendor;
 use Modules\VehicleManagement\DataTables\VehicleDataTable;
 use Modules\VehicleManagement\Entities\RTAOffice;
 use Modules\VehicleManagement\Entities\Vehicle;
 use Modules\VehicleManagement\Entities\VehicleOwnershipType;
 use Modules\VehicleManagement\Entities\VehicleType;
+
+use Modules\Companies\Entities\Company;
 
 class VehicleController extends Controller
 {
@@ -56,14 +58,36 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        return view('vehiclemanagement::vehicle.create_edit', [
-            'departments' => Department::all(),
-            'vehicle_types' => VehicleType::where('is_active', true)->get(),
-            'ownerships' => VehicleOwnershipType::where('is_active', true)->get(),
-            'vendors' => Vendor::where('is_active', true)->get(),
-            'drivers' => Driver::where('is_active', true)->get(),
-            'circle_offices' => RTAOffice::where('is_active', true)->get(),
-        ])->render();
+        $is_creatable = true;
+
+        if(canManageSettings())
+        {
+            $companies = Company::all();
+            return view('vehiclemanagement::vehicle.create_edit', [
+                'departments' => Department::all(),
+                'vehicle_types' => VehicleType::where('is_active', true)->get(),
+                'ownerships' => VehicleOwnershipType::where('is_active', true)->get(),
+                'vendors' => Vendor::where('is_active', true)->get(),
+                'drivers' => Driver::where('is_active', true)->get(),
+                'companies' => $companies,
+                'is_creatable' => $is_creatable,
+                //'circle_offices' => RTAOffice::where('is_active', true)->get(),
+            ])->render();
+        }
+        else
+        {
+            $company = getFirstCompanyUser();
+            return view('vehiclemanagement::vehicle.create_edit', [
+                'departments' => Department::all(),
+                'vehicle_types' => VehicleType::where('is_active', true)->get(),
+                'ownerships' => VehicleOwnershipType::where('is_active', true)->get(),
+                'vendors' => Vendor::where('is_active', true)->get(),
+                'drivers' => Driver::where('is_active', true)->get(),
+                'company' => $company,
+                'is_creatable' => $is_creatable,
+                //'circle_offices' => RTAOffice::where('is_active', true)->get(),
+            ])->render();
+        }
     }
 
     /**
@@ -81,13 +105,34 @@ class VehicleController extends Controller
             'ownership_id' => 'nullable|integer',
             'vehicle_type_id' => 'nullable|integer',
             'vehicle_division_id' => 'nullable|integer',
-            'rta_circle_office_id' => 'nullable|integer',
+            //'rta_circle_office_id' => 'nullable|integer',
             'driver_id' => 'nullable|integer',
             'vendor_id' => 'nullable|integer',
             'seat_capacity' => 'nullable|integer',
         ]);
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         $item = Vehicle::create($data);
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $item->companies()->sync($company->id);
+        }
+        else {
+            $item->companies()->sync($data['company_id']);
+        }
 
         return response()->success($item, localize('Vehicle Created Successfully'), 200);
     }
@@ -97,6 +142,8 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle)
     {
+        $is_creatable = false;
+        $company = $vehicle->primaryCompany();
 
         return view('vehiclemanagement::vehicle.create_edit', [
             'departments' => Department::all(),
@@ -104,8 +151,10 @@ class VehicleController extends Controller
             'ownerships' => VehicleOwnershipType::where('is_active', true)->get(),
             'vendors' => Vendor::where('is_active', true)->get(),
             'drivers' => Driver::where('is_active', true)->get(),
-            'circle_offices' => RTAOffice::where('is_active', true)->get(),
+            //'circle_offices' => RTAOffice::where('is_active', true)->get(),
             'item' => $vehicle,
+            'company' => $company,
+            'is_creatable' => $is_creatable,
         ])->render();
     }
 
@@ -124,11 +173,32 @@ class VehicleController extends Controller
             'ownership_id' => 'nullable|integer',
             'vehicle_type_id' => 'nullable|integer',
             'vehicle_division_id' => 'nullable|integer',
-            'rta_circle_office_id' => 'nullable|integer',
+            //'rta_circle_office_id' => 'nullable|integer',
             'driver_id' => 'nullable|integer',
             'vendor_id' => 'nullable|integer',
             'seat_capacity' => 'nullable|integer',
         ]);
+
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $vehicle->companies()->sync($company->id);
+        }
+        else {
+            $vehicle->companies()->sync($data['company_id']);
+        }
 
         $vehicle->update($data);
 

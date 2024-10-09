@@ -23,7 +23,7 @@
                         <select class="form-control basic-single" name="company_id" id="company" tabindex="-1"
                             aria-hidden="true">
                             <option value="">@localize('Please Select One')</option>
-                            @foreach ($companies as $key => $value)
+                            @foreach ($insurance_companies as $key => $value)
                                 <option value="{{ $value->id }}">{{ $value->name }}</option>
                             @endforeach
                         </select>

@@ -41,9 +41,6 @@ Route::prefix('inventory')->as('admin.inventory.')->group(function () {
         });
         Route::resource('/', 'InventoryPartsController')->parameters(['' => 'parts']);
     });
-    Route::prefix('vendor')->as('vendor.')->group(function () {
-        Route::resource('/', 'InventoryVendorController')->parameters(['' => 'vendor']);
-    });
 
     Route::prefix('expense')->as('expense.')->group(function () {
         Route::resource('/type', 'ExpenseTypeController')->parameters(['' => 'type']);

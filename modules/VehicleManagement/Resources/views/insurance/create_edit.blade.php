@@ -11,19 +11,58 @@
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-12 col-lg-6">
-
+            @if($is_creatable)
+            @if(can('setting_management'))
                 <div class="form-group row my-2">
-                    <label for="company_id" class="col-sm-5 col-form-label">@localize('Company Name') <i
-                            class="text-danger">*</i></label>
+                    <label for="license_type_ids" class="col-sm-5 col-form-label">@localize('Company') <i class="text-danger">*</i></label>
                     <div class="col-sm-7">
-                        <select class="form-control basic-single" name="company_id" id="company_id" tabindex="-1"
-                            aria-hidden="true" required>
-                            <option value="">@localize('Please Select One')</option>
+                        <select class="form-control basic-single" required name="company_id" id="company_id" data-select2-id="company" tabindex="-1" aria-hidden="true">
+                            <option value="" selected="selected">@localize('Please Select')</option>
                             @foreach ($companies as $company)
                                 <option value="{{ $company->id }}"
                                     {{ isset($item) ? ($item->company_id == $company->id ? 'selected' : '') : '' }}>
                                     {{ $company->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            @else
+                @if(isset($company->id))
+                    <div class="form-group row my-2">
+                        <label for="company_id" class="col-sm-5 col-form-label">@localize('Company')</label>
+                        <div class="col-sm-7">
+                            <input name="company_id" id="company_id" class="form-control" type="text" value="{{ $company->name }}" readonly>
+                            {{-- <input type="hidden" name="company_id" value="{{ $company->id }}"> --}}
+                        </div>
+                    </div>
+                @endif
+            @endif
+        @else
+            @if(isset($company->id))
+                <div class="form-group row my-2">
+                    <label for="company_id" class="col-sm-5 col-form-label">@localize('Company')</label>
+                    <div class="col-sm-7">
+                        <input name="company_id" id="company_id" class="form-control" type="text" value="{{ $company->name }}" readonly>
+                        {{-- <input type="hidden" name="company_id" value="{{ $company->id }}"> --}}
+                    </div>
+                </div>
+            @endif
+        @endif
+
+
+            <div class="col-md-12 col-lg-6">
+
+                <div class="form-group row my-2">
+                    <label for="insurance_company_id" class="col-sm-5 col-form-label">@localize('Insurance Company Name') <i
+                            class="text-danger">*</i></label>
+                    <div class="col-sm-7">
+                        <select class="form-control basic-single" name="insurance_company_id" id="insurance_company_id" tabindex="-1"
+                            aria-hidden="true" required>
+                            <option value="">@localize('Please Select One')</option>
+                            @foreach ($insurance_companies as $insurance_company)
+                                <option value="{{ $insurance_company->id }}"
+                                    {{ isset($item) ? ($item->insurance_company_id == $insurance_company->id ? 'selected' : '') : '' }}>
+                                    {{ $insurance_company->name }}</option>
                             @endforeach
                         </select>
                     </div>

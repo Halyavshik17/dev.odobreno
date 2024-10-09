@@ -64,7 +64,18 @@ class LegalDocumentationDataTable extends DataTable
         $date_from = $this->request()->get('date_from');
         $date_to = $this->request()->get('date_to');
 
-        $query = $model->newQuery()
+        $query = $model->newQuery();
+
+        if (!canManageSettings()) {
+            $user = auth()->user();
+            $company = $user->companies->first();
+
+            $query->join('company_legal_documentations', 'legal_documentations.id', '=', 'company_legal_documentations.legal_documentation_id')
+                  ->where('company_legal_documentations.company_id', $company->id)
+                  ->select('legal_documentations.*');
+        }
+
+        $query
             ->when($document_type, function ($query) use ($document_type) {
                 $query->where('document_type_id', $document_type);
             })

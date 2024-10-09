@@ -10,6 +10,8 @@ use Modules\Employee\Entities\Employee;
 use Modules\Employee\Entities\Position;
 use Modules\Employee\Http\Requests\EmployeeRequest;
 
+use Modules\Companies\Entities\Company;
+
 class EmployeeController extends Controller
 {
     public function __construct()
@@ -57,10 +59,28 @@ class EmployeeController extends Controller
         $departments = Department::all();
         $positions = Position::all();
 
-        return view('employee::employee.create_edit', [
-            'departments' => $departments,
-            'positions' => $positions,
-        ])->render();
+        $is_creatable = true;
+
+        if(canManageSettings())
+        {
+            $companies = Company::all();
+            return view('employee::employee.create_edit', [
+                'companies' => $companies,
+                'is_creatable' => $is_creatable,
+                'departments' => $departments,
+                'positions' => $positions,
+            ])->render();
+        }
+        else
+        {
+            $company = getFirstCompanyUser();
+            return view('employee::employee.create_edit', [
+                'company' => $company,
+                'is_creatable' => $is_creatable,
+                'departments' => $departments,
+                'positions' => $positions,
+            ])->render();
+        }
     }
 
     /**
@@ -73,11 +93,32 @@ class EmployeeController extends Controller
 
         $data = $request->validated();
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         if ($request->hasFile('picture')) {
             $data['avatar_path'] = upload_file($request, 'picture', 'employee');
         }
 
         $item = Employee::create($data);
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $item->companies()->sync($company->id);
+        }
+        else {
+            $item->companies()->sync($data['company_id']);
+        }
 
         return response()->success($item, localize('Employee Added Successfully'), 201);
     }
@@ -102,10 +143,15 @@ class EmployeeController extends Controller
         $departments = Department::all();
         $positions = Position::all();
 
+        $is_creatable = false;
+        $company = $employee->primaryCompany();
+
         return view('employee::employee.create_edit', [
             'item' => $employee,
             'departments' => $departments,
             'positions' => $positions,
+            'company' => $company,
+            'is_creatable' => $is_creatable,
         ])->render();
     }
 
@@ -120,6 +166,19 @@ class EmployeeController extends Controller
 
         $data = $request->validated();
 
+        if (canManageSettings()) {
+            $data['company_id'] = $request->validate([
+                'company_id' => 'required|integer|exists:companies,id',
+            ])['company_id'];
+        } else {
+            $company = getFirstCompanyUser();
+            if ($company) {
+                $data['company_id'] = $company->id;
+            } else {
+                return response()->json(['error' => 'No associated company found.'], 400);
+            }
+        }
+
         if ($request->hasFile('picture')) {
             $data['avatar_path'] = upload_file($request, 'picture', 'employee');
 
@@ -128,6 +187,14 @@ class EmployeeController extends Controller
             }
         } else {
             $data['avatar_path'] = $employee->avatar_path;
+        }
+
+        if(!canManageSettings()) {
+            $company = getFirstCompanyUser();
+            $employee->companies()->sync($company->id);
+        }
+        else {
+            $employee->companies()->sync($data['company_id']);
         }
 
         $employee->update($data);

@@ -71,4 +71,8 @@ Route::prefix('admin/vehicle')->as('admin.vehicle.')->group(function () {
         // insurance
         Route::resource('/', 'InsuranceController')->except(['show'])->parameter('', 'insurance');
     });
+
+    Route::prefix('vendor')->as('vendor.')->group(function () {
+        Route::resource('/', 'VehicleVendorController')->parameters(['' => 'vendor']);
+    });
 });

@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Employee\Database\factories\EmployeeFactory;
 
+use Modules\Companies\Entities\Company;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Employee extends Model
 {
     use HasFactory;
@@ -76,5 +79,15 @@ class Employee extends Model
     public function getAvatarUrlAttribute(): ?string
     {
         return $this->avatar_path ? storage_asset($this->avatar_path) : null;
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'company_employees', 'employee_id', 'company_id');
+    }
+
+    public function primaryCompany(): ?Company
+    {
+        return $this->companies()->first();
     }
 }

@@ -8,7 +8,6 @@ use Modules\Employee\Database\factories\DriverFactory;
 
 use Modules\Companies\Entities\Company;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Driver extends Model
 {
